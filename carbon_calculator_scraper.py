@@ -1,4 +1,5 @@
 import time
+import random
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -17,15 +18,37 @@ class TerrapassCarbonCalculator:
         self.wait = None
         self.results = {}
         self.states_required_countries = []
+        self.country_count = 0  # Track countries processed for session management
+        
+    def random_delay(self, base_delay, variation=0.2):
+        """Add random variation to delays to make behavior more human-like"""
+        actual_delay = base_delay + random.uniform(-variation, variation)
+        actual_delay = max(0.1, actual_delay)  # Minimum 0.1 second
+        time.sleep(actual_delay)
         
     def setup_driver(self):
-        """Setup Chrome web driver with appropriate options"""
+        """Setup Chrome web driver with optimized options"""
         chrome_options = webdriver.ChromeOptions()
+        
+        # Headless mode for faster performance
+        chrome_options.add_argument("--headless")
+        
+        # Performance optimizations
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
+        
+        # Additional performance optimizations
+        chrome_options.add_argument("--disable-images")
+        chrome_options.add_argument("--disable-plugins")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+        chrome_options.add_argument("--memory-pressure-off")
+        chrome_options.add_argument("--max_old_space_size=4096")
         
         # Set Chrome binary path for macOS
         chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -46,13 +69,13 @@ class TerrapassCarbonCalculator:
                 raise
         
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-        self.wait = WebDriverWait(self.driver, 10)
+        self.wait = WebDriverWait(self.driver, 5)  # Reduced from 10 to 5 seconds
         
     def navigate_to_calculator(self):
         """Navigate to the Terrapass carbon calculator"""
         url = "https://terrapass.com/carbon-footprint-calculator/"
         self.driver.get(url)
-        time.sleep(5)  # Allow page to load
+        self.random_delay(2.5)  # Reduced from 5 to 2.5 seconds
         
         # Switch to the calculator iframe
         try:
@@ -61,15 +84,15 @@ class TerrapassCarbonCalculator:
             )
             self.driver.switch_to.frame(iframe)
             print("Switched to calculator iframe")
-            time.sleep(3)  # Allow iframe content to load
+            self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
             
             # Select Individual Calculator
             individual_selectors = [
+                "//a[contains(text(), 'Individual Calculator')]",  # Prioritize link over button
                 "//button[contains(text(), 'Individual Calculator')]",
                 "//button[contains(text(), 'Individual')]",
                 "//div[contains(text(), 'Individual Calculator')]",
                 "//span[contains(text(), 'Individual Calculator')]",
-                "//a[contains(text(), 'Individual Calculator')]",
                 "//input[@value='Individual Calculator']"
             ]
             
@@ -87,7 +110,7 @@ class TerrapassCarbonCalculator:
             if individual_button:
                 individual_button.click()
                 print("Clicked Individual Calculator button")
-                time.sleep(3)  # Allow the calculator to load
+                self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
                 
                 # Navigate to Home Energy section
                 home_energy_selectors = [
@@ -111,7 +134,7 @@ class TerrapassCarbonCalculator:
                 if home_energy_button:
                     home_energy_button.click()
                     print("Clicked Home Energy button")
-                    time.sleep(3)  # Allow the home energy section to load
+                    self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
                 else:
                     print("Could not find Home Energy button")
                     # Continue anyway, maybe we're already in the right section
@@ -160,12 +183,12 @@ class TerrapassCarbonCalculator:
             except:
                 # If it's not a select element, try clicking and typing
                 country_dropdown.click()
-                time.sleep(1)
+                self.random_delay(0.5)
                 country_dropdown.send_keys(country_name)
-                time.sleep(1)
+                self.random_delay(0.5)
                 country_dropdown.send_keys(Keys.ENTER)
             
-            time.sleep(2)
+            self.random_delay(1)  # Reduced from 2 to 1 second
             
             # Check if state/province field appears
             state_selectors = [
@@ -194,6 +217,40 @@ class TerrapassCarbonCalculator:
     def click_next(self):
         """Click the NEXT button"""
         try:
+            # First, try to handle cookie banner if present
+            try:
+                cookie_banner = self.driver.find_element(By.ID, "ifrmCookieBanner")
+                if cookie_banner.is_displayed():
+                    print("Cookie banner detected, switching to it...")
+                    self.driver.switch_to.frame(cookie_banner)
+                    
+                    # Try to find and click accept/close button
+                    accept_selectors = [
+                        "//button[contains(text(), 'Accept')]",
+                        "//button[contains(text(), 'Accept All')]",
+                        "//button[contains(text(), 'OK')]",
+                        "//button[contains(text(), 'Close')]",
+                        "//a[contains(text(), 'Accept')]",
+                        "//a[contains(text(), 'Close')]"
+                    ]
+                    
+                    for selector in accept_selectors:
+                        try:
+                            accept_button = self.driver.find_element(By.XPATH, selector)
+                            if accept_button.is_displayed():
+                                accept_button.click()
+                                print("Clicked cookie banner accept button")
+                                break
+                        except:
+                            continue
+                    
+                    # Switch back to main content
+                    self.driver.switch_to.default_content()
+                    self.driver.switch_to.frame(self.driver.find_element(By.CSS_SELECTOR, "iframe.calculator"))
+                    self.random_delay(0.5)
+            except:
+                pass  # No cookie banner or already handled
+            
             # Try multiple selectors for the NEXT button
             next_selectors = [
                 "//button[contains(text(), 'NEXT')]",
@@ -218,8 +275,17 @@ class TerrapassCarbonCalculator:
                     continue
             
             if next_button:
-                next_button.click()
-                time.sleep(2)
+                # Try to scroll the button into view
+                self.driver.execute_script("arguments[0].scrollIntoView(true);", next_button)
+                self.random_delay(0.3)
+                
+                # Try clicking with JavaScript if regular click fails
+                try:
+                    next_button.click()
+                except:
+                    self.driver.execute_script("arguments[0].click();", next_button)
+                
+                self.random_delay(1)  # Reduced from 2 to 1 second
                 return True
             else:
                 print("Could not find NEXT button")
@@ -232,7 +298,7 @@ class TerrapassCarbonCalculator:
         """Input electricity consumption value"""
         try:
             # Wait for the electricity input section to load
-            time.sleep(2)
+            self.random_delay(1)  # Reduced from 2 to 1 second
             
             # Look for electricity input field - it might be the first input field in the form
             electricity_input = None
@@ -297,7 +363,7 @@ class TerrapassCarbonCalculator:
         """Extract the carbon footprint value from the dashboard"""
         try:
             # Wait for the carbon dashboard to load
-            time.sleep(3)
+            self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
             
             # Look for the home energy value in the dashboard
             home_energy_element = self.wait.until(
@@ -345,7 +411,7 @@ class TerrapassCarbonCalculator:
             
             if prev_button:
                 prev_button.click()
-                time.sleep(2)
+                self.random_delay(1)  # Reduced from 2 to 1 second
                 return True
             else:
                 print("Could not find PREV button")
@@ -363,7 +429,7 @@ class TerrapassCarbonCalculator:
                     prev_button = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Prev')]")
                     if prev_button.is_enabled():
                         prev_button.click()
-                        time.sleep(1)
+                        self.random_delay(0.5)  # Reduced from 1 to 0.5 seconds
                     else:
                         break  # No more prev buttons to click
                 except:
@@ -383,14 +449,14 @@ class TerrapassCarbonCalculator:
             # If we can't reset, refresh the page and re-navigate
             print("Refreshing calculator to reset state...")
             self.driver.refresh()
-            time.sleep(3)
+            self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
             
             # Re-switch to the iframe (this was missing!)
             iframe = self.wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "iframe.calculator"))
             )
             self.driver.switch_to.frame(iframe)
-            time.sleep(3)
+            self.random_delay(1.5)  # Reduced from 3 to 1.5 seconds
             
             # Re-navigate to Individual Calculator and Home Energy
             individual_selectors = [
@@ -503,20 +569,45 @@ class TerrapassCarbonCalculator:
         """Test a country with different electricity consumption values"""
         print(f"\nTesting country: {country_name}")
         
-        # Reset calculator state for each new country
-        if not self.reset_calculator_state():
-            print(f"Failed to reset calculator state for {country_name}")
-            return None
+        # Try to find country dropdown - if not found, try to navigate back
+        try:
+            country_dropdown = self.driver.find_element(By.CSS_SELECTOR, "select[name='country']")
+        except:
+            # If dropdown not found, try to go back multiple times to reach country selection
+            print("Country dropdown not found, navigating back to country selection...")
+            for attempt in range(5):  # Try up to 5 times
+                try:
+                    prev_button = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Prev')]")
+                    if prev_button.is_enabled():
+                        prev_button.click()
+                        self.random_delay(0.3)
+                        
+                        # Check if we found the dropdown
+                        try:
+                            country_dropdown = self.driver.find_element(By.CSS_SELECTOR, "select[name='country']")
+                            print(f"Found country dropdown after {attempt + 1} back clicks")
+                            break
+                        except:
+                            continue
+                    else:
+                        print(f"Could not navigate to country selection for {country_name}")
+                        return None
+                except:
+                    print(f"Could not navigate to country selection for {country_name}")
+                    return None
+            else:
+                print(f"Could not find country dropdown after multiple attempts for {country_name}")
+                return None
         
         # Select country from dropdown
         try:
-            country_dropdown = self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "select[name='country']"))
-            )
+            # Wait for country options to load dynamically
+            self.random_delay(1)
+            
             select = Select(country_dropdown)
             select.select_by_visible_text(country_name)
             print(f"Selected country: {country_name}")
-            time.sleep(2)
+            self.random_delay(1)  # Reduced from 2 to 1 second
         except Exception as e:
             print(f"Error selecting country {country_name}: {e}")
             return None
@@ -538,6 +629,7 @@ class TerrapassCarbonCalculator:
             
         country_results = {}
         
+        # Batch test all kWh values for this country
         for kwh in electricity_values:
             print(f"  Testing {kwh} kWh...")
             
@@ -562,7 +654,7 @@ class TerrapassCarbonCalculator:
         return country_results
         
     def run_analysis(self, electricity_values):
-        """Run the complete analysis"""
+        """Run the complete analysis with session management and error handling"""
         self.setup_driver()
         
         try:
@@ -576,10 +668,40 @@ class TerrapassCarbonCalculator:
             
             print(f"Testing {len(countries)} countries in alphabetical order...")
             
-            for country in countries:
-                results = self.test_country_electricity(country, electricity_values)
-                if results:
-                    self.results[country] = results
+            for i, country in enumerate(countries):
+                try:
+                    print(f"\n--- Processing country {i+1}/{len(countries)}: {country} ---")
+                    
+                    results = self.test_country_electricity(country, electricity_values)
+                    if results:
+                        self.results[country] = results
+                    
+                    # Session management: restart browser every 50 countries
+                    self.country_count += 1
+                    if self.country_count % 50 == 0:
+                        print(f"\n--- Restarting browser after {self.country_count} countries ---")
+                        self.driver.quit()
+                        self.random_delay(2)  # Brief pause
+                        self.setup_driver()
+                        self.navigate_to_calculator()
+                    
+                    # Save intermediate results every 10 countries
+                    if self.country_count % 10 == 0:
+                        self.save_results("intermediate_results.xlsx")
+                        print(f"Saved intermediate results after {self.country_count} countries")
+                        
+                except Exception as e:
+                    print(f"Error processing country {country}: {e}")
+                    # Try to recover by restarting the driver
+                    try:
+                        print("Attempting driver recovery...")
+                        self.driver.quit()
+                        self.random_delay(2)
+                        self.setup_driver()
+                        self.navigate_to_calculator()
+                    except Exception as recovery_error:
+                        print(f"Failed to recover driver: {recovery_error}")
+                        break
                     
         finally:
             self.driver.quit()
