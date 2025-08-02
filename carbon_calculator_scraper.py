@@ -380,23 +380,73 @@ class TerrapassCarbonCalculator:
             except:
                 pass
             
-            # If we can't reset, refresh the iframe
+            # If we can't reset, refresh the page and re-navigate
             print("Refreshing calculator to reset state...")
             self.driver.refresh()
             time.sleep(3)
             
-            # Re-navigate to Individual Calculator and Home Energy
-            individual_button = self.wait.until(
-                EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Individual Calculator')]"))
+            # Re-switch to the iframe (this was missing!)
+            iframe = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "iframe.calculator"))
             )
-            individual_button.click()
+            self.driver.switch_to.frame(iframe)
             time.sleep(3)
             
-            home_energy_button = self.wait.until(
-                EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'ico-home')]"))
-            )
-            home_energy_button.click()
-            time.sleep(3)
+            # Re-navigate to Individual Calculator and Home Energy
+            individual_selectors = [
+                "//button[contains(text(), 'Individual Calculator')]",
+                "//button[contains(text(), 'Individual')]",
+                "//div[contains(text(), 'Individual Calculator')]",
+                "//span[contains(text(), 'Individual Calculator')]",
+                "//a[contains(text(), 'Individual Calculator')]",
+                "//input[@value='Individual Calculator']"
+            ]
+            
+            individual_button = None
+            for selector in individual_selectors:
+                try:
+                    individual_button = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, selector))
+                    )
+                    print(f"Found Individual Calculator button with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if individual_button:
+                individual_button.click()
+                print("Clicked Individual Calculator button")
+                time.sleep(3)  # Allow the calculator to load
+                
+                # Navigate to Home Energy section
+                home_energy_selectors = [
+                    "//a[contains(@class, 'ico-home')]",
+                    "//a[contains(text(), 'Home Energy')]",
+                    "//button[contains(text(), 'Home Energy')]",
+                    "//div[contains(text(), 'Home Energy')]"
+                ]
+                
+                home_energy_button = None
+                for selector in home_energy_selectors:
+                    try:
+                        home_energy_button = self.wait.until(
+                            EC.element_to_be_clickable((By.XPATH, selector))
+                        )
+                        print(f"Found Home Energy button with selector: {selector}")
+                        break
+                    except TimeoutException:
+                        continue
+                
+                if home_energy_button:
+                    home_energy_button.click()
+                    print("Clicked Home Energy button")
+                    time.sleep(3)  # Allow the home energy section to load
+                else:
+                    print("Could not find Home Energy button")
+                    # Continue anyway, maybe we're already in the right section
+            else:
+                print("Could not find Individual Calculator button")
+                # Continue anyway, maybe we're already in the calculator
             
             print("Successfully reset calculator state")
             return True
@@ -404,6 +454,50 @@ class TerrapassCarbonCalculator:
         except Exception as e:
             print(f"Error resetting calculator state: {e}")
             return False
+    
+    def get_country_list(self):
+        """Get the list of countries from the dropdown in alphabetical order"""
+        try:
+            # Wait a bit longer for the page to fully load
+            time.sleep(3)
+            
+            # Try multiple selectors for the country dropdown
+            country_selectors = [
+                "select[name='country']",
+                "select[id='country']",
+                "select[data-name='country']",
+                "select"
+            ]
+            
+            country_dropdown = None
+            for selector in country_selectors:
+                try:
+                    country_dropdown = self.wait.until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                    )
+                    print(f"Found country dropdown with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if not country_dropdown:
+                print("Could not find country dropdown with any selector")
+                return []
+            
+            select = Select(country_dropdown)
+            
+            countries = []
+            for option in select.options:
+                country_name = option.text.strip()
+                if country_name and country_name != "Country":  # Skip the default option
+                    countries.append(country_name)
+            
+            print(f"Found {len(countries)} countries in dropdown")
+            return countries
+            
+        except Exception as e:
+            print(f"Error getting country list: {e}")
+            return []
     
     def test_country_electricity(self, country_name, electricity_values):
         """Test a country with different electricity consumption values"""
@@ -467,12 +561,20 @@ class TerrapassCarbonCalculator:
                 
         return country_results
         
-    def run_analysis(self, countries, electricity_values):
+    def run_analysis(self, electricity_values):
         """Run the complete analysis"""
         self.setup_driver()
         
         try:
             self.navigate_to_calculator()
+            
+            # Get the actual country list from the dropdown
+            countries = self.get_country_list()
+            if not countries:
+                print("Could not get country list from dropdown")
+                return
+            
+            print(f"Testing {len(countries)} countries in alphabetical order...")
             
             for country in countries:
                 results = self.test_country_electricity(country, electricity_values)
@@ -509,15 +611,6 @@ class TerrapassCarbonCalculator:
 
 def main():
     """Main function to run the analysis"""
-    # Test all available countries
-    test_countries = [
-        "United States", "Canada", "United Kingdom", "Germany", "France", 
-        "Australia", "Japan", "China", "India", "Brazil", "Mexico", "Italy", 
-        "Spain", "Netherlands", "Sweden", "Norway", "Denmark", "Finland", 
-        "Switzerland", "Austria", "Belgium", "Poland", "Czech Republic", 
-        "Hungary", "Romania", "Bulgaria", "Greece", "Portugal", "Ireland"
-    ]
-    
     # Electricity consumption values to test
     electricity_values = [50, 100, 250, 500, 1000]
     
@@ -526,7 +619,7 @@ def main():
     
     # Run the analysis
     print("Starting Terrapass Carbon Calculator Analysis...")
-    calculator.run_analysis(test_countries, electricity_values)
+    calculator.run_analysis(electricity_values)
     
     # Save results
     calculator.save_results()
@@ -536,8 +629,7 @@ def main():
     print("ANALYSIS SUMMARY")
     print("="*50)
     
-    print(f"\nCountries tested: {len(test_countries)}")
-    print(f"Countries with results: {len(calculator.results)}")
+    print(f"\nCountries with results: {len(calculator.results)}")
     print(f"Countries requiring state selection: {len(calculator.states_required_countries)}")
     
     print(f"\nCountries requiring state selection:")
