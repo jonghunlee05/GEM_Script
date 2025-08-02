@@ -1,0 +1,561 @@
+import time
+import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+
+class TerrapassCarbonCalculator:
+    def __init__(self):
+        """Initialize the web driver and setup"""
+        self.driver = None
+        self.wait = None
+        self.results = {}
+        self.states_required_countries = []
+        
+    def setup_driver(self):
+        """Setup Chrome web driver with appropriate options"""
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        
+        # Set Chrome binary path for macOS
+        chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        
+        try:
+            # Try to use webdriver-manager to get the correct driver
+            from webdriver_manager.chrome import ChromeDriverManager
+            service = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+        except Exception as e:
+            print(f"Error with webdriver-manager: {e}")
+            # Fallback to system ChromeDriver
+            try:
+                self.driver = webdriver.Chrome(options=chrome_options)
+            except Exception as e2:
+                print(f"Error with system ChromeDriver: {e2}")
+                print("Please make sure Chrome browser is installed and ChromeDriver is available")
+                raise
+        
+        self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        self.wait = WebDriverWait(self.driver, 10)
+        
+    def navigate_to_calculator(self):
+        """Navigate to the Terrapass carbon calculator"""
+        url = "https://terrapass.com/carbon-footprint-calculator/"
+        self.driver.get(url)
+        time.sleep(5)  # Allow page to load
+        
+        # Switch to the calculator iframe
+        try:
+            iframe = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "iframe.calculator"))
+            )
+            self.driver.switch_to.frame(iframe)
+            print("Switched to calculator iframe")
+            time.sleep(3)  # Allow iframe content to load
+            
+            # Select Individual Calculator
+            individual_selectors = [
+                "//button[contains(text(), 'Individual Calculator')]",
+                "//button[contains(text(), 'Individual')]",
+                "//div[contains(text(), 'Individual Calculator')]",
+                "//span[contains(text(), 'Individual Calculator')]",
+                "//a[contains(text(), 'Individual Calculator')]",
+                "//input[@value='Individual Calculator']"
+            ]
+            
+            individual_button = None
+            for selector in individual_selectors:
+                try:
+                    individual_button = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, selector))
+                    )
+                    print(f"Found Individual Calculator button with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if individual_button:
+                individual_button.click()
+                print("Clicked Individual Calculator button")
+                time.sleep(3)  # Allow the calculator to load
+                
+                # Navigate to Home Energy section
+                home_energy_selectors = [
+                    "//a[contains(@class, 'ico-home')]",
+                    "//a[contains(text(), 'Home Energy')]",
+                    "//button[contains(text(), 'Home Energy')]",
+                    "//div[contains(text(), 'Home Energy')]"
+                ]
+                
+                home_energy_button = None
+                for selector in home_energy_selectors:
+                    try:
+                        home_energy_button = self.wait.until(
+                            EC.element_to_be_clickable((By.XPATH, selector))
+                        )
+                        print(f"Found Home Energy button with selector: {selector}")
+                        break
+                    except TimeoutException:
+                        continue
+                
+                if home_energy_button:
+                    home_energy_button.click()
+                    print("Clicked Home Energy button")
+                    time.sleep(3)  # Allow the home energy section to load
+                else:
+                    print("Could not find Home Energy button")
+                    # Continue anyway, maybe we're already in the right section
+            else:
+                print("Could not find Individual Calculator button")
+                # Continue anyway, maybe we're already in the calculator
+                
+        except TimeoutException:
+            print("Could not find calculator iframe")
+            raise
+        
+    def select_country(self, country_name):
+        """Select a country from the dropdown"""
+        try:
+            # Wait for country dropdown to be present - try multiple selectors
+            country_selectors = [
+                "select[name='country']", 
+                "select[id='country']",
+                "select[data-name='country']",
+                "select",
+                "div[role='listbox']",
+                "input[placeholder*='country']",
+                "input[placeholder*='Country']"
+            ]
+            
+            country_dropdown = None
+            for selector in country_selectors:
+                try:
+                    country_dropdown = self.wait.until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                    )
+                    print(f"Found country dropdown with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if not country_dropdown:
+                print(f"Could not find country dropdown for {country_name}")
+                return False
+            
+            # Try to select the country
+            try:
+                select = Select(country_dropdown)
+                select.select_by_visible_text(country_name)
+                print(f"Selected country: {country_name}")
+            except:
+                # If it's not a select element, try clicking and typing
+                country_dropdown.click()
+                time.sleep(1)
+                country_dropdown.send_keys(country_name)
+                time.sleep(1)
+                country_dropdown.send_keys(Keys.ENTER)
+            
+            time.sleep(2)
+            
+            # Check if state/province field appears
+            state_selectors = [
+                "select[name='state']", 
+                "select[id='state']",
+                "select[data-name='state']",
+                "input[placeholder*='state']",
+                "input[placeholder*='State']"
+            ]
+            
+            for selector in state_selectors:
+                try:
+                    state_field = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    print(f"Country {country_name} requires state selection - skipping")
+                    return False
+                except NoSuchElementException:
+                    continue
+            
+            print(f"Country {country_name} selected successfully")
+            return True
+                
+        except Exception as e:
+            print(f"Error selecting country {country_name}: {e}")
+            return False
+            
+    def click_next(self):
+        """Click the NEXT button"""
+        try:
+            # Try multiple selectors for the NEXT button
+            next_selectors = [
+                "//button[contains(text(), 'NEXT')]",
+                "//button[contains(text(), 'Next')]",
+                "//button[contains(text(), 'next')]",
+                "//input[@value='NEXT']",
+                "//input[@value='Next']",
+                "//a[contains(text(), 'NEXT')]",
+                "//div[contains(text(), 'NEXT')]",
+                "//span[contains(text(), 'NEXT')]"
+            ]
+            
+            next_button = None
+            for selector in next_selectors:
+                try:
+                    next_button = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, selector))
+                    )
+                    print(f"Found NEXT button with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if next_button:
+                next_button.click()
+                time.sleep(2)
+                return True
+            else:
+                print("Could not find NEXT button")
+                return False
+        except Exception as e:
+            print(f"Error clicking NEXT button: {e}")
+            return False
+            
+    def input_electricity_consumption(self, kwh_value):
+        """Input electricity consumption value"""
+        try:
+            # Wait for the electricity input section to load
+            time.sleep(2)
+            
+            # Look for electricity input field - it might be the first input field in the form
+            electricity_input = None
+            
+            # Try to find input by looking for electricity-related text nearby
+            electricity_selectors = [
+                "//input[preceding-sibling::*[contains(text(), 'ELECTRICITY')]]",
+                "//input[following-sibling::*[contains(text(), 'ELECTRICITY')]]",
+                "//input[ancestor::*[contains(text(), 'ELECTRICITY')]]",
+                "//input[@type='number']",
+                "//input[@type='text']",
+                "//input"
+            ]
+            
+            for selector in electricity_selectors:
+                try:
+                    inputs = self.driver.find_elements(By.XPATH, selector)
+                    for input_elem in inputs:
+                        if input_elem.is_displayed() and input_elem.is_enabled():
+                            electricity_input = input_elem
+                            print(f"Found electricity input with selector: {selector}")
+                            break
+                    if electricity_input:
+                        break
+                except:
+                    continue
+            
+            if not electricity_input:
+                print(f"Could not find electricity input field for {kwh_value} kWh")
+                return False
+            
+            # Clear and enter the value
+            electricity_input.clear()
+            electricity_input.send_keys(str(kwh_value))
+            print(f"Entered {kwh_value} kWh")
+            
+            # Try to ensure kWh and per Month are selected if dropdowns exist
+            try:
+                unit_dropdowns = self.driver.find_elements(By.CSS_SELECTOR, "select")
+                for dropdown in unit_dropdowns:
+                    try:
+                        select = Select(dropdown)
+                        options = [option.text for option in select.options]
+                        if "kWh" in options:
+                            select.select_by_visible_text("kWh")
+                            print("Selected kWh unit")
+                        elif "per Month" in options:
+                            select.select_by_visible_text("per Month")
+                            print("Selected per Month frequency")
+                    except:
+                        pass
+            except:
+                pass
+                
+            return True
+            
+        except Exception as e:
+            print(f"Error inputting electricity consumption {kwh_value} kWh: {e}")
+            return False
+            
+    def get_carbon_footprint(self):
+        """Extract the carbon footprint value from the dashboard"""
+        try:
+            # Wait for the carbon dashboard to load
+            time.sleep(3)
+            
+            # Look for the home energy value in the dashboard
+            home_energy_element = self.wait.until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Home Energy')]/following-sibling::*[contains(text(), 'lbs CO2e')]"))
+            )
+            
+            # Extract the numeric value
+            text = home_energy_element.text
+            import re
+            # Updated regex to handle commas in numbers (e.g., "1,369.07")
+            match = re.search(r'([\d,]+\.?\d*)', text)
+            if match:
+                # Remove commas and convert to float
+                value_str = match.group(1).replace(',', '')
+                return float(value_str)
+            else:
+                print("Could not extract carbon footprint value")
+                return None
+                
+        except TimeoutException:
+            print("Could not find carbon footprint value")
+            return None
+            
+    def go_back_to_energy_section(self):
+        """Go back to the energy input section"""
+        try:
+            # Try multiple selectors for the PREV button
+            prev_selectors = [
+                "//button[contains(text(), 'PREV')]",
+                "//button[contains(text(), 'Prev')]",
+                "//button[contains(text(), 'prev')]",
+                "//button[contains(@class, 'btn-prev')]"
+            ]
+            
+            prev_button = None
+            for selector in prev_selectors:
+                try:
+                    prev_button = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, selector))
+                    )
+                    print(f"Found PREV button with selector: {selector}")
+                    break
+                except TimeoutException:
+                    continue
+            
+            if prev_button:
+                prev_button.click()
+                time.sleep(2)
+                return True
+            else:
+                print("Could not find PREV button")
+                return False
+        except Exception as e:
+            print(f"Error going back to energy section: {e}")
+            return False
+            
+    def reset_calculator_state(self):
+        """Reset the calculator to the initial country selection state"""
+        try:
+            # Try to navigate back to the beginning by clicking Prev multiple times
+            for i in range(10):  # Try up to 10 times
+                try:
+                    prev_button = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Prev')]")
+                    if prev_button.is_enabled():
+                        prev_button.click()
+                        time.sleep(1)
+                    else:
+                        break  # No more prev buttons to click
+                except:
+                    break  # No prev button found
+            
+            # If we're still not at the beginning, refresh the page
+            try:
+                country_dropdown = self.driver.find_element(By.CSS_SELECTOR, "select[name='country']")
+                # Check if we're at the beginning by looking for the default "Country" option
+                select = Select(country_dropdown)
+                if select.first_selected_option.text == "Country":
+                    print("Successfully reset to country selection state")
+                    return True
+            except:
+                pass
+            
+            # If we can't reset, refresh the iframe
+            print("Refreshing calculator to reset state...")
+            self.driver.refresh()
+            time.sleep(3)
+            
+            # Re-navigate to Individual Calculator and Home Energy
+            individual_button = self.wait.until(
+                EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Individual Calculator')]"))
+            )
+            individual_button.click()
+            time.sleep(3)
+            
+            home_energy_button = self.wait.until(
+                EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'ico-home')]"))
+            )
+            home_energy_button.click()
+            time.sleep(3)
+            
+            print("Successfully reset calculator state")
+            return True
+            
+        except Exception as e:
+            print(f"Error resetting calculator state: {e}")
+            return False
+    
+    def test_country_electricity(self, country_name, electricity_values):
+        """Test a country with different electricity consumption values"""
+        print(f"\nTesting country: {country_name}")
+        
+        # Reset calculator state for each new country
+        if not self.reset_calculator_state():
+            print(f"Failed to reset calculator state for {country_name}")
+            return None
+        
+        # Select country from dropdown
+        try:
+            country_dropdown = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "select[name='country']"))
+            )
+            select = Select(country_dropdown)
+            select.select_by_visible_text(country_name)
+            print(f"Selected country: {country_name}")
+            time.sleep(2)
+        except Exception as e:
+            print(f"Error selecting country {country_name}: {e}")
+            return None
+        
+        # Check if state dropdown appears and has options
+        try:
+            state_dropdown = self.driver.find_element(By.CSS_SELECTOR, "select[name='state']")
+            state_options = state_dropdown.find_elements(By.TAG_NAME, "option")
+            if len(state_options) > 1:  # More than just "State"
+                print(f"Country {country_name} requires state selection - adding to states_required list")
+                self.states_required_countries.append(country_name)
+                return None
+        except:
+            pass  # No state dropdown, continue
+            
+        # Click NEXT to proceed to electricity input section
+        if not self.click_next():
+            return None
+            
+        country_results = {}
+        
+        for kwh in electricity_values:
+            print(f"  Testing {kwh} kWh...")
+            
+            # Input electricity consumption
+            if not self.input_electricity_consumption(kwh):
+                continue
+                
+            # Click NEXT to see results
+            if not self.click_next():
+                continue
+                
+            # Get carbon footprint
+            carbon_value = self.get_carbon_footprint()
+            if carbon_value is not None:
+                country_results[kwh] = carbon_value
+                print(f"    Result: {carbon_value} lbs CO2e")
+                
+            # Go back to energy section for next test
+            if not self.go_back_to_energy_section():
+                break
+                
+        return country_results
+        
+    def run_analysis(self, countries, electricity_values):
+        """Run the complete analysis"""
+        self.setup_driver()
+        
+        try:
+            self.navigate_to_calculator()
+            
+            for country in countries:
+                results = self.test_country_electricity(country, electricity_values)
+                if results:
+                    self.results[country] = results
+                    
+        finally:
+            self.driver.quit()
+            
+    def save_results(self, filename="carbon_footprint_results.xlsx"):
+        """Save results to Excel file"""
+        if not self.results:
+            print("No results to save")
+            return
+            
+        # Create DataFrame
+        data = []
+        electricity_values = [50, 100, 250, 500, 1000]
+        
+        for country, results in self.results.items():
+            row = {'Country': country}
+            for kwh in electricity_values:
+                row[f'{kwh}kwh'] = results.get(kwh, 'N/A')
+            data.append(row)
+            
+        df = pd.DataFrame(data)
+        df.to_excel(filename, index=False)
+        print(f"Results saved to {filename}")
+        
+        # Also save as CSV
+        csv_filename = filename.replace('.xlsx', '.csv')
+        df.to_csv(csv_filename, index=False)
+        print(f"Results also saved to {csv_filename}")
+
+def main():
+    """Main function to run the analysis"""
+    # Test all available countries
+    test_countries = [
+        "United States", "Canada", "United Kingdom", "Germany", "France", 
+        "Australia", "Japan", "China", "India", "Brazil", "Mexico", "Italy", 
+        "Spain", "Netherlands", "Sweden", "Norway", "Denmark", "Finland", 
+        "Switzerland", "Austria", "Belgium", "Poland", "Czech Republic", 
+        "Hungary", "Romania", "Bulgaria", "Greece", "Portugal", "Ireland"
+    ]
+    
+    # Electricity consumption values to test
+    electricity_values = [50, 100, 250, 500, 1000]
+    
+    # Create calculator instance
+    calculator = TerrapassCarbonCalculator()
+    
+    # Run the analysis
+    print("Starting Terrapass Carbon Calculator Analysis...")
+    calculator.run_analysis(test_countries, electricity_values)
+    
+    # Save results
+    calculator.save_results()
+    
+    # Print summary
+    print("\n" + "="*50)
+    print("ANALYSIS SUMMARY")
+    print("="*50)
+    
+    print(f"\nCountries tested: {len(test_countries)}")
+    print(f"Countries with results: {len(calculator.results)}")
+    print(f"Countries requiring state selection: {len(calculator.states_required_countries)}")
+    
+    print(f"\nCountries requiring state selection:")
+    for country in calculator.states_required_countries:
+        print(f"  - {country}")
+    
+    print(f"\nCountries with carbon footprint results:")
+    for country, results in calculator.results.items():
+        print(f"\n{country}:")
+        for kwh, carbon in results.items():
+            print(f"  {kwh} kWh: {carbon} lbs CO2e")
+    
+    # Save states required countries to a separate file
+    if calculator.states_required_countries:
+        with open("states_required_countries.txt", "w") as f:
+            for country in calculator.states_required_countries:
+                f.write(f"{country}\n")
+        print(f"\nStates required countries saved to: states_required_countries.txt")
+
+if __name__ == "__main__":
+    main() 

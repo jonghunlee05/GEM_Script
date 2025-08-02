@@ -1,0 +1,711 @@
+<html class="no-js"><!--<![endif]--><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TerraPass Carbon Footprint Calculator</title>
+    <meta name="description" content="">
+    <!--<meta name="viewport" content="width=device-width">-->
+    <!--<meta name="viewport" content="content=width=device-width, initial-scale=1.0, user-scalable=no">-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://www.terrapass.com/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="assets/stylesheets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic">
+<style type="text/css">/* You can add global styles to this file, and also import other style files */
+</style><style type="text/css">/*! nouislider - 9.0.0 - 2016-09-29 21:44:03 */
+
+
+.noUi-target,.noUi-target *{-webkit-touch-callout:none;-webkit-user-select:none;-ms-touch-action:none;touch-action:none;-ms-user-select:none;-moz-user-select:none;user-select:none;-webkit-box-sizing:border-box;box-sizing:border-box}
+
+
+.noUi-target{position:relative;direction:ltr}
+
+
+.noUi-base{width:100%;height:100%;position:relative;z-index:1}
+
+
+.noUi-connect{position:absolute;right:0;top:0;left:0;bottom:0}
+
+
+.noUi-origin{position:absolute;height:0;width:0}
+
+
+.noUi-handle{position:relative;z-index:1}
+
+
+.noUi-state-tap .noUi-connect,.noUi-state-tap .noUi-origin{-webkit-transition:top .3s,right .3s,bottom .3s,left .3s;transition:top .3s,right .3s,bottom .3s,left .3s}
+
+
+.noUi-state-drag *{cursor:inherit!important}
+
+
+.noUi-base,.noUi-handle{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}
+
+
+.noUi-horizontal{height:18px}
+
+
+.noUi-horizontal .noUi-handle{width:34px;height:28px;left:-17px;top:-6px}
+
+
+.noUi-vertical{width:18px}
+
+
+.noUi-vertical .noUi-handle{width:28px;height:34px;left:-6px;top:-17px}
+
+
+.noUi-target{background:#FAFAFA;border-radius:4px;border:1px solid #D3D3D3;-webkit-box-shadow:inset 0 1px 1px #F0F0F0,0 3px 6px -5px #BBB;box-shadow:inset 0 1px 1px #F0F0F0,0 3px 6px -5px #BBB}
+
+
+.noUi-connect{background:#3FB8AF;-webkit-box-shadow:inset 0 0 3px rgba(51,51,51,.45);box-shadow:inset 0 0 3px rgba(51,51,51,.45);-webkit-transition:background 450ms;transition:background 450ms}
+
+
+.noUi-draggable{cursor:w-resize}
+
+
+.noUi-vertical .noUi-draggable{cursor:n-resize}
+
+
+.noUi-handle{border:1px solid #D9D9D9;border-radius:3px;background:#FFF;cursor:default;-webkit-box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #EBEBEB,0 3px 6px -3px #BBB;box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #EBEBEB,0 3px 6px -3px #BBB}
+
+
+.noUi-active{-webkit-box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB;box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB}
+
+
+.noUi-handle:after,.noUi-handle:before{content:"";display:block;position:absolute;height:14px;width:1px;background:#E8E7E6;left:14px;top:6px}
+
+
+.noUi-handle:after{left:17px}
+
+
+.noUi-vertical .noUi-handle:after,.noUi-vertical .noUi-handle:before{width:14px;height:1px;left:6px;top:14px}
+
+
+.noUi-vertical .noUi-handle:after{top:17px}
+
+
+[disabled] .noUi-connect{background:#B8B8B8}
+
+
+[disabled] .noUi-handle,[disabled].noUi-handle,[disabled].noUi-target{cursor:not-allowed}
+
+
+.noUi-pips,.noUi-pips *{-webkit-box-sizing:border-box;box-sizing:border-box}
+
+
+.noUi-pips{position:absolute;color:#999}
+
+
+.noUi-value{position:absolute;text-align:center}
+
+
+.noUi-value-sub{color:#ccc;font-size:10px}
+
+
+.noUi-marker{position:absolute;background:#CCC}
+
+
+.noUi-marker-large,.noUi-marker-sub{background:#AAA}
+
+
+.noUi-pips-horizontal{padding:10px 0;height:80px;top:100%;left:0;width:100%}
+
+
+.noUi-value-horizontal{-webkit-transform:translate3d(-50%,50%,0);transform:translate3d(-50%,50%,0)}
+
+
+.noUi-marker-horizontal.noUi-marker{margin-left:-1px;width:2px;height:5px}
+
+
+.noUi-marker-horizontal.noUi-marker-sub{height:10px}
+
+
+.noUi-marker-horizontal.noUi-marker-large{height:15px}
+
+
+.noUi-pips-vertical{padding:0 10px;height:100%;top:0;left:100%}
+
+
+.noUi-value-vertical{-webkit-transform:translate3d(0,50%,0);transform:translate3d(0,50%,0);padding-left:25px}
+
+
+.noUi-marker-vertical.noUi-marker{width:5px;height:2px;margin-top:-1px}
+
+
+.noUi-marker-vertical.noUi-marker-sub{width:10px}
+
+
+.noUi-marker-vertical.noUi-marker-large{width:15px}
+
+
+.noUi-tooltip{display:block;position:absolute;border:1px solid #D9D9D9;border-radius:3px;background:#fff;color:#000;padding:5px;text-align:center}
+
+
+.noUi-horizontal .noUi-tooltip{-webkit-transform:translate(-50%,0);transform:translate(-50%,0);left:50%;bottom:120%}
+
+
+.noUi-vertical .noUi-tooltip{-webkit-transform:translate(0,-50%);transform:translate(0,-50%);top:50%;right:120%}</style><style></style><style>#spinner-wrap[_ngcontent-chj-12] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 9999;
+}
+
+.spinner[_ngcontent-chj-12] {
+    width: 40px;
+    height: 40px;
+
+    position: relative;
+    margin: 100px auto;
+}
+
+.double-bounce1[_ngcontent-chj-12], .double-bounce2[_ngcontent-chj-12] {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #333;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2[_ngcontent-chj-12] {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+    0%, 100% { -webkit-transform: scale(0.0) }
+    50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 50% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+      }
+}</style></head>
+<body>
+    <tpc-root ng-version="2.4.10" _nghost-chj-10=""><router-outlet _ngcontent-chj-10=""></router-outlet><tpc-calculator _nghost-chj-14=""><div _ngcontent-chj-14="" class="wrapper">
+    <div _ngcontent-chj-14="" id="calculator-container">
+
+        <div _ngcontent-chj-14="" id="col-content-wrapper">
+            <tpc-calculator-item _ngcontent-chj-14="" _nghost-chj-16=""><router-outlet _ngcontent-chj-16=""></router-outlet><tpc-individual-calculator _nghost-chj-17=""><div _ngcontent-chj-17="" id="col-content">
+    <tpc-calculator-header _ngcontent-chj-17="" _nghost-chj-20=""><header _ngcontent-chj-20="">
+    <!--template bindings={
+  "ng-reflect-ng-if": "true"
+}--><h1 _ngcontent-chj-20="">
+        <div _ngcontent-chj-20="" class="header-first-line">individual</div>
+        <span _ngcontent-chj-20="" class="individual-vehicle-color">Vehicle</span>
+    </h1>
+</header>
+
+</tpc-calculator-header>
+
+    <tpc-calculator-methodology _ngcontent-chj-17="" _nghost-chj-22="" ng-reflect-calculator-name="Individual">
+<div _ngcontent-chj-22="" aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="methodologyModal" role="dialog" tabindex="-1" ng-reflect-klass="modal fade in" ng-reflect-ng-class="[object Object]">
+    <div _ngcontent-chj-22="" class="modal-dialog">
+        <div _ngcontent-chj-22="" class="modal-content">
+            <div _ngcontent-chj-22="" class="modal-header">
+                <button _ngcontent-chj-22="" class="close" data-dismiss="modal" type="button">
+                    <span _ngcontent-chj-22="" aria-hidden="true">×</span>
+                    <span _ngcontent-chj-22="" class="sr-only">Close</span>
+                </button>
+                <h4 _ngcontent-chj-22="" class="modal-title" id="myModalLabel">Our Methodology</h4>
+            </div>
+            <div _ngcontent-chj-22="" class="modal-body">
+
+                <a _ngcontent-chj-22="" name="default"></a>
+                <h3 _ngcontent-chj-22="">Sources</h3><a _ngcontent-chj-22="" name="top"></a>
+                <p _ngcontent-chj-22=""><a _ngcontent-chj-22="" href="http://www.epa.gov/" target="_blank">Environmental Protection Agency</a> • <a _ngcontent-chj-22="" href="http://www.fueleconomy.gov/" target="_blank">fueleconomy.gov</a> • <a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">World Resources Institute</a> • <a _ngcontent-chj-22="" href="http://www.eia.gov/consumption/commercial/" target="_blank">Commercial Buildings Energy
+                    Consumption Survey</a> • <a _ngcontent-chj-22="" href="http://www.energy.gov/" target="_blank">Department of Energy</a> •
+                    <a _ngcontent-chj-22="" href="http://www.bieroundtable.com/files/bottled-water-final-dep.pdf#!energy--climate/c1y5j" target="_blank">Beverage Industry Environmental Roundtable</a> • <a _ngcontent-chj-22="" href="http://www.jhsph.edu/research/centers-and-institutes/johns-hopkins-center-for-a-livable-future/_pdf/research/clf_reports/kim_neff_carbon_calculators.pdf" target="_blank">Johns Hopkins Center for a Livable Future</a> • </p>
+
+                <p _ngcontent-chj-22="">Wherever possible, we use established emissions factors and protocols from expert sources:</p>
+                <ul _ngcontent-chj-22="">
+                    <li _ngcontent-chj-22="">World Resources Institute provides greenhouse gas protocols for all common modes of
+                        transportation.
+                    </li>
+                    <li _ngcontent-chj-22="">The <a _ngcontent-chj-22="" href="http://www.epa.gov/" target="_blank">EPA</a> and <a _ngcontent-chj-22="" href="http://www.rita.dot.gov/bts/" target="_blank">Bureau of Transportation Statistics</a>
+                        provide helpful data on vehicle efficiency in the US.
+                    </li>
+                    <li _ngcontent-chj-22="">The <a _ngcontent-chj-22="" href="http://www.epa.gov/" target="_blank">EPA</a> provides data on the carbon intensity
+                        of regional electricity production through its <a _ngcontent-chj-22="" href="http://www.epa.gov/cleanenergy/energy-resources/egrid/" target="_blank">eGRID
+                            database</a>. The <a _ngcontent-chj-22="" href="http://www.energy.gov/" target="_blank">Department of Energy</a>
+                        also compiles statistics on regional carbon intensity.
+                    </li>
+                </ul>
+                <p _ngcontent-chj-22="">Where standard figures don't exist, we rely on industry surveys to inform our assumptions about
+                    average energy consumption from various activities.</p>
+
+                <p _ngcontent-chj-22="">Our online calculator is only meant to provide an estimate. It is designed to be as accurate as
+                    possible while still being easy to use. It is not a substitute for a full energy audit. In our
+                    experience, the results from our online calculator generally map quite well to more sophisticated
+                    analysis methods, but the calculator does rely on a number of assumptions about average emissions
+                    factors. If those assumptions don't accurately describe your lifestyle, business or event, the
+                    calculator may not yield reliable results for you. You can contact us at <a _ngcontent-chj-22="" href="support@terrapass.com">support@terrapass.com</a> for more information or assistance.</p>
+
+
+                
+                <a _ngcontent-chj-22="" name="individual"></a>
+                <div _ngcontent-chj-22="" id="individual-methodology" ng-reflect-ng-class="[object Object]" class="hidden">
+
+                    <a _ngcontent-chj-22="" name="individual-vehicle"></a>
+                    <h3 _ngcontent-chj-22="" id="individual-vehicle"> Vehicle <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">We estimate the amount of carbon dioxide equivalent emissions your car emits into the air every
+                        year based on your mileage and the type of vehicle you drive. Based on the year, make, and model
+                        of your car, we use the <a _ngcontent-chj-22="" href="http://www.fueleconomy.gov/" target="_blank">U.S. Department of
+                            Energy's ratings</a> to find your fuel economy, or miles per gallon of gas.</p>
+
+                    <p _ngcontent-chj-22="">The average American drives 12,000 miles per year, but you can adjust this figure based on how
+                        much you drive. Multiplying the number of miles you specify by the fuel economy rating gives us
+                        the total quantity of fuel you will use in a year, in gallons.</p>
+                    <p _ngcontent-chj-22=""><a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">We apply the World Resources Institute’s (WRI)</a>
+                        emission factors to calculate the total CO2e equivalent emissions from your vehicle.</p>
+
+
+                    <h3 _ngcontent-chj-22="">Special Case: Electric vehicles</h3>
+                    <p _ngcontent-chj-22="">All-electric vehicles use electricity-charged batteries as fuel. Since electricity isn't measured
+                        in gallons, and since the greenhouse gas emissions from electricity use are not as simple as
+                        those for liquid fuels, our calculator treats these cars differently. Electric vehicle emissions
+                        are calculated by looking at your annual mileage (as reported by you) and the emission factor of
+                        the electricity generation in your area.</p>
+
+                    <h3 _ngcontent-chj-22="">Special Case: Boats</h3>
+                    <p _ngcontent-chj-22="">We calculate the footprint of your boat based on the amount of fuel you use each year, and the
+                        type of fuel you use. Based on the fuel type you select, we calculate the emissions using <a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">WRI’s emission factors</a>.</p>
+
+                    <a _ngcontent-chj-22="" name="individual-transit"></a>
+                    <h3 _ngcontent-chj-22="">Public Transit <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">We estimate the amount of carbon dioxide your commute emits into the air every year based on your
+                        mode of transit and how far you travel. Multiplying the number of miles you specify by the
+                        frequency of your travel gives us the total annual mileage for each transit type.</p>
+
+                    <p _ngcontent-chj-22="">We apply the <a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">World Resources Institute’s (WRI)</a>
+                        emission factors to calculate the total CO2e equivalent emissions from your commute.</p>
+
+                    <a _ngcontent-chj-22="" name="individual-travel"></a>
+                    <h3 _ngcontent-chj-22="">Air Travel <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the
+                        Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">There are several different ways to calculate your carbon emissions from flying: by number of
+                        miles, number of flights, gallons of fuel, or individual trips. For any of these options, you
+                        can choose to factor in the Radiative Forcing Index (RFI). RFI accounts for more than just the
+                        carbon emissions from your flight. It also takes into account other emissions from burning fuel,
+                        like soot, contrails and other factors that magnify the warming effect in the upper atmosphere
+                        over time.</p>
+
+                    <h4 _ngcontent-chj-22="">Short, Medium &amp; Long Flights</h4>
+                    <p _ngcontent-chj-22="">We use assumptions based on the greenhouse gas emissions protocols developed by the <a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">World Resource Institute (WRI)</a> to approximate the
+                        emissions from standard flight distances. The actual amount of fuel burned per passenger per
+                        mile depends on the type of plane, the number of people flying, the weight of the cargo, and
+                        other factors.</p>
+
+                    <h4 _ngcontent-chj-22="">The average distances for each flight are as follows:</h4>
+                    <ul _ngcontent-chj-22="">
+                        <li _ngcontent-chj-22="">Short Haul: 462 miles</li>
+                        <li _ngcontent-chj-22="">Medium Haul: 1,108 miles</li>
+                        <li _ngcontent-chj-22="">Long Haul: 6,482 miles</li>
+                    </ul>
+
+                    <h4 _ngcontent-chj-22="">Direct vs. Layovers</h4>
+                    <p _ngcontent-chj-22="">Because take-off and landing use more fuel than flying at the same altitude, we add an additional
+                        per-stopover emission calculation of 225 lbs CO2 for any flights that aren’t nonstop.</p>
+
+                    <h4 _ngcontent-chj-22="">Calculating Your Flight’s Emissions</h4>
+                    <p _ngcontent-chj-22="">We start by calculating the distance between your origin and destination city, based on their
+                        latitude and longitude. This is a standard trigonometric calculation, and we ignore any
+                        stopovers you might make along the way. If you wish to calculate the effect of stopovers, simply
+                        enter the legs of the flight as separate trips.</p>
+
+                    <p _ngcontent-chj-22="">Next we categorize your flight as a short-, medium-, or long-haul trip. Because planes burn more
+                        fuel at takeoff and landing than at cruising altitude, short-haul trips are less fuel-efficient
+                        per mile flown.</p>
+
+                    <p _ngcontent-chj-22="">For each of the three types of trips, we use a different carbon index that indicates the amount
+                        of fuel burned, on average, per mile of the journey. By multiplying this index by the distance
+                        of your trip, we determine how much fuel was burned per passenger for that particular
+                        flight.</p>
+
+                    <h4 _ngcontent-chj-22="">Cabin Class</h4>
+                    <p _ngcontent-chj-22="">Whether you fly coach, business, or first class makes a difference, too. More leg room means a
+                        higher emission factor for the larger portion of the space you take up.</p>
+
+                    <a _ngcontent-chj-22="" name="individual-home"></a>
+                    <h3 _ngcontent-chj-22="">Home Energy <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the
+                        Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">To calculate your home energy use, we use a combination of consumption, price and emissions
+                        statistics. Consumption and price information for electricity, natural gas, heating oil and
+                        propane all come from the <a _ngcontent-chj-22="" href="http://www.eia.gov/" target="_blank">Energy Information
+                            Administration</a> at the <a _ngcontent-chj-22="" href="http://www.energy.gov/" target="_blank">Department of
+                            Energy</a>.</p>
+
+                    <p _ngcontent-chj-22="">Electricity emissions data comes from the <a _ngcontent-chj-22="" href="http://www.epa.gov/cleanenergy/energy-resources/egrid/" target="_blank">EPA's eGRID
+                        program</a>. Emission rates for electricity varies by area due to regional differences in fuel
+                        sources for power plants. You can check your electricity's emissions rate using the <a _ngcontent-chj-22="" href="http://oaspub.epa.gov/powpro/ept_pack.charts" target="_blank">EPA's Power Profiler</a>.
+                    </p>
+
+                </div>
+
+                
+                <a _ngcontent-chj-22="" name="business"></a>
+                <div _ngcontent-chj-22="" id="business-methodology" ng-reflect-ng-class="[object Object]" class="hidden">
+
+                    <a _ngcontent-chj-22="" name="business-site"></a>
+                    <h3 _ngcontent-chj-22="">Site <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">We estimate emissions associated with building energy use (heating, air conditioning, lighting,
+                        etc.) by looking at your location and the amount of energy consumed. If you don’t know how much
+                        energy you use at your site, we can determine that from the amount of your utility bill.</p>
+
+                    <p _ngcontent-chj-22="">Your geography determines two things: the source of your electricity, and your seasonal patterns
+                        of energy consumption. For example, some regions of the country use a heavier mix of renewable
+                        sources to produce electricity. Regions with more extreme weather use more energy for
+                        temperature control.</p>
+
+                    <a _ngcontent-chj-22="" name="business-server"></a>
+                    <h3 _ngcontent-chj-22="">Server <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Servers are the big computers companies use to power their web sites, store sensitive data, and
+                        run ecommerce applications. Computers are highly energy-intensive. In the U.S., computer data
+                        centers are responsible for about 1.5% of our electricity use, a figure that is growing
+                        rapidly.</p>
+
+                    <p _ngcontent-chj-22="">If your company doesn't have a large internet presence, computer data centers won't make up a
+                        significant portion of your carbon footprint. If you run a large-scale consumer web site, on the
+                        other hand, you're probably already aware of how high your utility bills are.</p>
+
+                    <p _ngcontent-chj-22="">For companies with large-scale web sites, we estimate your footprint using information about the
+                        location of your data center and the approximate size (in number of servers). For others, we add
+                        a small constant emissions factor to your footprint.</p>
+
+                    <a _ngcontent-chj-22="" name="business-fleet"></a>
+                    <h3 _ngcontent-chj-22="">Fleet <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Estimating emissions from company-owned vehicles is fairly easy. We just multiply the number of
+                        vehicles by the miles driven and the average fuel economy.</p>
+
+                    <p _ngcontent-chj-22="">Because precise fuel economy numbers can be hard to come by, we just ask you for the number of
+                        vehicles in various vehicle classes. For each class, we use an average fuel economy figure.</p>
+
+                    <a _ngcontent-chj-22="" name="business-travel"></a>
+                    <h3 _ngcontent-chj-22="">Air Travel <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the
+                        Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Employee travel can create emissions in a number of ways, but one overshadows all the others:
+                        plane travel. Our travel emissions calculator works by multiplying the number of employees who
+                        travel by the average number of trips they take each year. Using assumptions about the distance
+                        of a typical business trip, we assign emissions factors to various trip types.</p>
+
+                    <p _ngcontent-chj-22="">Hotels are also sources of emissions, due to the energy needed to heat, cool, and light the
+                        rooms. Relatively speaking, these emissions are modest, but they can add up if you have a large
+                        traveling workforce.</p>
+
+                    <a _ngcontent-chj-22="" name="business-commute"></a>
+                    <h3 _ngcontent-chj-22="">Commute <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Calculating employee commutes is similar to that for company-owned vehicles. By multiplying the
+                        number of commuting employees by the average commute distance and assigning an emissions factor
+                        for different vehicle types, we can come up with a good estimate for emissions from employee
+                        commutes.</p>
+
+                    <a _ngcontent-chj-22="" name="business-shipping"></a>
+                    <h3 _ngcontent-chj-22="">Shipping <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">We calculate your shipping footprint by looking at how much and how far you ship. Based on the
+                        freight type, we apply <a _ngcontent-chj-22="" href="http://www.wri.org/" target="_blank">World Resource Institute’s
+                            (WRI) emission factors</a> to figure out the total impact of your business shipments.</p>
+
+                </div>
+
+                
+                <a _ngcontent-chj-22="" name="events"></a>
+                <div _ngcontent-chj-22="" id="events-methodology" ng-reflect-ng-class="[object Object]" class="hidden">
+
+                    <a _ngcontent-chj-22="" name="events-travel"></a>
+                    <h3 _ngcontent-chj-22="">Air Travel <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the
+                        Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22=""><i _ngcontent-chj-22=""><strong _ngcontent-chj-22="">Air travel to the event</strong></i><br _ngcontent-chj-22="">
+                        For most events, this is by far the most important category of emissions. Planes burn a lot of
+                        fuel, and these days many events bring together people from all over the country or even the
+                        world.</p>
+
+                    
+                        
+                        
+
+                    <p _ngcontent-chj-22=""><i _ngcontent-chj-22=""><strong _ngcontent-chj-22="">Hotel stays</strong></i><br _ngcontent-chj-22="">
+                        Hot showers, lighting, and air conditioning all require electricity. For many events, this
+                        energy use can add up.</p>
+
+                    <a _ngcontent-chj-22="" name="events-commute"></a>
+                    <h3 _ngcontent-chj-22="">Commute <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Calculating attendee travel to your event is simple – Just multiply the number of commuting
+                        attendees by the average distance traveled and select a vehicle type. We will take this
+                        information and calculate an accurate estimate for total emissions for your event.</p>
+
+                    <a _ngcontent-chj-22="" name="events-venue"></a>
+                    <h3 _ngcontent-chj-22="">Venue <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Hotels and event venues are sources of emissions, due to the energy needed to heat, cool, and
+                        light the rooms. We estimate emissions associated with building energy use (heating, air
+                        conditioning, lighting, etc.) by looking at your event’s location and the amount of energy
+                        consumed. Then we use the data collected in the <a _ngcontent-chj-22="" href="http://www.eia.gov/consumption/commercial/" target="_blank">Commercial Buildings
+                            Energy Consumption Survey (CBECS)</a> by the <a _ngcontent-chj-22="" href="http://www.eia.gov/">Energy
+                            Information Administration (EIA)</a> to calculate the emissions associated with using the
+                        site for your event. </p>
+
+                    <a _ngcontent-chj-22="" name="events-water"></a>
+                    <h3 _ngcontent-chj-22="">Water <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Water bottles are a huge source of waste in the events industry. We encourage you to work with
+                        the event venue to find other ways to serve water to your guests. For those events that need to
+                        use water bottles, we calculate the carbon footprint of these water bottles with an emission
+                        factor from the <a _ngcontent-chj-22="" href="http://www.bieroundtable.com/files/bottled-water-final-dep.pdf#!energy--climate/c1y5j" target="_blank">Beverage Industry Environmental Roundtable</a>.</p>
+
+                    <a _ngcontent-chj-22="" name="events-meals"></a>
+                    <h3 _ngcontent-chj-22="">Meals <a _ngcontent-chj-22="" class="back-to-top-link" href="#">Back to the Top <span _ngcontent-chj-22="" class="glyphicon glyphicon-arrow-up"></span></a></h3>
+                    <p _ngcontent-chj-22="">Food consumption can have a big impact on the environment. The food you choose to serve at your
+                        event makes a difference, too—vegetarian meals have a lower impact than meals containing meat.
+                        We use a study from the <a _ngcontent-chj-22="" href="http://www.jhsph.edu/research/centers-and-institutes/johns-hopkins-center-for-a-livable-future/_pdf/research/clf_reports/kim_neff_carbon_calculators.pdf" target="_blank">Johns Hopkins Center for a Livable Future</a> that looks at the measurement
+                        and communication of greenhouse gas emissions from U.S. food consumption.</p>
+
+                    <p _ngcontent-chj-22="">If you’re interested in learning more about the carbon footprint of a meal, check out the study
+                        we did with Lucky Peach to determine the climate impact of eating at home versus eating out at a
+                        restaurant.</p>
+
+                </div>
+
+            </div>
+            <div _ngcontent-chj-22="" class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</tpc-calculator-methodology>
+
+    <router-outlet _ngcontent-chj-17=""></router-outlet><tpc-vehicle _nghost-chj-25=""><router-outlet _ngcontent-chj-25=""></router-outlet><tpc-vehicle-default _nghost-chj-41=""><div _ngcontent-chj-41="" data-region="main">
+    <div _ngcontent-chj-41="" class="view-question">Select a type of vehicle to add</div>
+    <form _ngcontent-chj-41="" name="ind_vehicle_default_view" novalidate="" ng-reflect-form="[object Object]" class="ng-untouched ng-pristine ng-invalid">
+        <div _ngcontent-chj-41="" class="form-element-container" ng-reflect-klass="form-element-container" ng-reflect-ng-class="[object Object]">
+            <label _ngcontent-chj-41="" for="vehicleType">
+                Vehicle Type
+            </label>
+            <div _ngcontent-chj-41="" class="form-element">
+                <select _ngcontent-chj-41="" class="form-control ng-untouched ng-pristine ng-invalid" formcontrolname="vehicleType" id="vehicleType" name="vehicleType" ng-reflect-name="vehicleType">
+                    <option _ngcontent-chj-41="" selected="selected" value="">Please select, then hit Next</option>
+                    <option _ngcontent-chj-41="" value="car" ng-reflect-value="car">Car</option>
+                    <option _ngcontent-chj-41="" value="ecar" ng-reflect-value="ecar">Electric Car</option>
+                    
+                    <option _ngcontent-chj-41="" value="boat" ng-reflect-value="boat">Boat</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+</tpc-vehicle-default>
+</tpc-vehicle>
+
+    <tpc-calculator-footer _ngcontent-chj-17="" _nghost-chj-21="" ng-reflect-is-gate-page="true"><footer _ngcontent-chj-21="">
+    <div _ngcontent-chj-21="" class="footer-content ui-helper-clearfix">
+        <div _ngcontent-chj-21="" ng-reflect-class-name="col-md-3 col-sm-3 col-xs-3" class="col-md-3 col-sm-3 col-xs-3">
+            <button _ngcontent-chj-21="" type="button" ng-reflect-class-name="btn btn-prev btn-lg individual-vehicle-bg" class="btn btn-prev btn-lg individual-vehicle-bg">
+                Prev
+            </button>
+        </div>
+
+        <div _ngcontent-chj-21="" class="col-md-3 col-md-offset-2 col-sm-2 col-sm-offset-2 col-xs-2 col-xs-offset-2">
+            <button _ngcontent-chj-21="" type="button" ng-reflect-class-name="btn btn-skip btn-lg individual-vehicle-bg" class="btn btn-skip btn-lg individual-vehicle-bg">
+                Skip
+            </button>
+        </div>
+
+        <div _ngcontent-chj-21="" ng-reflect-class-name="col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-2 col-xs-2 col-xs-offset-2" class="col-md-2 col-md-offset-1 col-sm-2 col-sm-offset-2 col-xs-2 col-xs-offset-2">
+            <button _ngcontent-chj-21="" type="button" ng-reflect-class-name="btn btn-next btn-lg individual-vehicle-bg" class="btn btn-next btn-lg individual-vehicle-bg">
+                Next
+            </button>
+        </div>
+    </div>
+</footer>
+</tpc-calculator-footer>
+</div>
+
+<tpc-navbar _ngcontent-chj-17="" _nghost-chj-23="" ng-reflect-calculator-name="individual" ng-reflect-menu-items="[object Object],[object Object],[object Object],[object Object]"><div _ngcontent-chj-23="" data-region="menu" id="col-nav">
+    <ul _ngcontent-chj-23="" class="menu">
+        <!--template bindings={
+  "ng-reflect-ng-for-of": "[object Object],[object Object],[object Object],[object Object]"
+}--><li _ngcontent-chj-23="" ng-reflect-ng-class="vehicle" class="vehicle" ng-reflect-ng-style="[object Object]">
+            <a _ngcontent-chj-23="" ng-reflect-ng-class="btn btn-default btn-circle-36 category-nav-btn ico-vehicle individual-vehicle-bg" class="btn btn-default btn-circle-36 category-nav-btn ico-vehicle individual-vehicle-bg" ng-reflect-ng-style="[object Object]">Vehicle</a>
+            <!--template bindings={
+  "ng-reflect-ng-if": null
+}-->
+        </li><li _ngcontent-chj-23="" ng-reflect-ng-class="transit" class="transit" ng-reflect-ng-style="[object Object]">
+            <a _ngcontent-chj-23="" ng-reflect-ng-class="btn btn-default btn-circle-36 category-nav-btn ico-transit individual-transit-bg" class="btn btn-default btn-circle-36 category-nav-btn ico-transit individual-transit-bg" ng-reflect-ng-style="[object Object]">Public Transit</a>
+            <!--template bindings={
+  "ng-reflect-ng-if": null
+}-->
+        </li><li _ngcontent-chj-23="" ng-reflect-ng-class="travel" class="travel" ng-reflect-ng-style="[object Object]">
+            <a _ngcontent-chj-23="" ng-reflect-ng-class="btn btn-default btn-circle-36 category-nav-btn ico-travel individual-travel-bg" class="btn btn-default btn-circle-36 category-nav-btn ico-travel individual-travel-bg" ng-reflect-ng-style="[object Object]">Air Travel</a>
+            <!--template bindings={
+  "ng-reflect-ng-if": null
+}-->
+        </li><li _ngcontent-chj-23="" ng-reflect-ng-class="home" class="home" ng-reflect-ng-style="[object Object]">
+            <a _ngcontent-chj-23="" ng-reflect-ng-class="btn btn-default btn-circle-36 category-nav-btn ico-home individual-home-bg" class="btn btn-default btn-circle-36 category-nav-btn ico-home individual-home-bg" ng-reflect-ng-style="[object Object]">Home Energy</a>
+            <!--template bindings={
+  "ng-reflect-ng-if": null
+}-->
+        </li>
+
+        <li _ngcontent-chj-23="" ng-reflect-ng-style="[object Object]">
+            <a _ngcontent-chj-23="" class="methodology-btn btn btn-default btn-circle-36 category-nav-btn ico-methodology methodology-bg visible" href="#" ng-reflect-klass="methodology-btn btn btn-default btn-circle-36 category-nav-btn ico-methodology methodology-bg" ng-reflect-ng-class="visible" ng-reflect-ng-style="[object Object]">Methodology</a>
+        </li>
+    </ul>
+</div>
+</tpc-navbar>
+
+
+
+</tpc-individual-calculator>
+</tpc-calculator-item>
+        </div>
+
+        <div _ngcontent-chj-14="" data-region="summary" id="col-summary">
+            <tpc-dashboard _ngcontent-chj-14="" _nghost-chj-15=""><h1 _ngcontent-chj-15="">
+    <div _ngcontent-chj-15="" class="header-first-line">Your Carbon</div>
+    <span _ngcontent-chj-15="" class="dark-gray">Dashboard</span></h1>
+
+<!--template bindings={
+  "ng-reflect-ng-if": null
+}-->
+
+<div _ngcontent-chj-15="" data-region="you-graph-header">
+    <h2 _ngcontent-chj-15="" class="you-graph-header graph-header" ng-reflect-id="you-total-graph-header" id="you-total-graph-header">Your Total<span _ngcontent-chj-15="" class="summary-total">
+            0.00
+            lbs of CO2e
+        </span>
+    </h2>
+
+</div>
+
+
+<div _ngcontent-chj-15="" class="graph-table" style="width: 0%;">
+    <table _ngcontent-chj-15="" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody _ngcontent-chj-15=""><tr _ngcontent-chj-15="" class="graph">
+            <!--template bindings={
+  "ng-reflect-ng-for-of": "[object Object],[object Object],[object Object],[object Object]"
+}--><td _ngcontent-chj-15="" ng-reflect-id="you-graph-cat-vehicle" id="you-graph-cat-vehicle" width="NaN%" ng-reflect-class-name="you-graph-category graph-category individual-vehicle-bg" class="you-graph-category graph-category individual-vehicle-bg" style="visibility: hidden;"></td><td _ngcontent-chj-15="" ng-reflect-id="you-graph-cat-transit" id="you-graph-cat-transit" width="NaN%" ng-reflect-class-name="you-graph-category graph-category individual-transit-bg" class="you-graph-category graph-category individual-transit-bg" style="visibility: hidden;"></td><td _ngcontent-chj-15="" ng-reflect-id="you-graph-cat-travel" id="you-graph-cat-travel" width="NaN%" ng-reflect-class-name="you-graph-category graph-category individual-travel-bg" class="you-graph-category graph-category individual-travel-bg" style="visibility: hidden;"></td><td _ngcontent-chj-15="" ng-reflect-id="you-graph-cat-home" id="you-graph-cat-home" width="NaN%" ng-reflect-class-name="you-graph-category graph-category individual-home-bg" class="you-graph-category graph-category individual-home-bg" style="visibility: hidden;"></td>
+        </tr>
+    </tbody></table>
+</div>
+
+
+<div _ngcontent-chj-15="" data-region="emissions">
+    <h2 _ngcontent-chj-15="">Your Emissions <span _ngcontent-chj-15="" class="summary-total"><a _ngcontent-chj-15="" href="">See results in mT</a></span>
+    </h2>
+    <div _ngcontent-chj-15="" class="offset">
+        
+            <!--template bindings={
+  "ng-reflect-ng-for-of": "[object Object],[object Object],[object Object],[object Object]"
+}--><div _ngcontent-chj-15="" class="offset-category">
+            <div _ngcontent-chj-15="" ng-reflect-class-name="btn btn-default btn-circle-12 individual-vehicle-bg inline-block" class="btn btn-default btn-circle-12 individual-vehicle-bg inline-block"></div>
+            <div _ngcontent-chj-15="" class="offset-category-title">Vehicle</div>
+            <div _ngcontent-chj-15="" class="offset-category-amount">0.00
+                lbs CO2e
+            </div>
+        </div><div _ngcontent-chj-15="" class="offset-category">
+            <div _ngcontent-chj-15="" ng-reflect-class-name="btn btn-default btn-circle-12 individual-transit-bg inline-block" class="btn btn-default btn-circle-12 individual-transit-bg inline-block"></div>
+            <div _ngcontent-chj-15="" class="offset-category-title">Public Transit</div>
+            <div _ngcontent-chj-15="" class="offset-category-amount">0.00
+                lbs CO2e
+            </div>
+        </div><div _ngcontent-chj-15="" class="offset-category">
+            <div _ngcontent-chj-15="" ng-reflect-class-name="btn btn-default btn-circle-12 individual-travel-bg inline-block" class="btn btn-default btn-circle-12 individual-travel-bg inline-block"></div>
+            <div _ngcontent-chj-15="" class="offset-category-title">Air Travel</div>
+            <div _ngcontent-chj-15="" class="offset-category-amount">0.00
+                lbs CO2e
+            </div>
+        </div><div _ngcontent-chj-15="" class="offset-category">
+            <div _ngcontent-chj-15="" ng-reflect-class-name="btn btn-default btn-circle-12 individual-home-bg inline-block" class="btn btn-default btn-circle-12 individual-home-bg inline-block"></div>
+            <div _ngcontent-chj-15="" class="offset-category-title">Home Energy</div>
+            <div _ngcontent-chj-15="" class="offset-category-amount">0.00
+                lbs CO2e
+            </div>
+        </div>
+    </div>
+</div>
+
+<div _ngcontent-chj-15="" class="total">
+    <h2 _ngcontent-chj-15="" class="bold" id="total-title">Total</h2>
+    <div _ngcontent-chj-15="">Your carbon footprint is <span _ngcontent-chj-15="" class="bold">0.00 lbs of CO2e</span>.
+        That's equivalent to planting
+        0.00 urban trees.
+    </div>
+    <!--template bindings={
+  "ng-reflect-ng-if": "true"
+}--><form _ngcontent-chj-15="" name="ind_summary_view" class="ng-untouched ng-pristine ng-valid">
+        <div _ngcontent-chj-15="" class="form-element">
+            <select _ngcontent-chj-15="" class="form-control" name="offset-select">
+                
+                
+                
+                
+
+                
+                
+                
+                
+
+                
+                
+                
+
+                 <optgroup _ngcontent-chj-15="" ng-reflect-label="Offset Products for Individuals" label="Offset Products for Individuals">
+                    <option _ngcontent-chj-15="" class="lbsOption" value="all" ng-reflect-value="all">
+                        Offset 0.00
+                        lbs of 
+                        CO2e
+                    </option>
+                    <option _ngcontent-chj-15="" value="monthly" ng-reflect-value="monthly">
+                        Offset 0.00 lbs per month of 
+                        CO2e
+                    </option>         
+                </optgroup>
+
+                
+            </select>
+        </div>
+        <div _ngcontent-chj-15="" class="form-element">
+            <button _ngcontent-chj-15="" id="buyBtn" type="button" ng-reflect-disabled="true" disabled="" ng-reflect-class-name="btn btn-lg individual-vehicle-bg btn-primary" class="btn btn-lg individual-vehicle-bg btn-primary">
+                Buy Offsets
+            </button>
+        </div>
+    </form>
+</div>
+
+<form _ngcontent-chj-15="" class="hidden" method="post" ngnoform="" target="_blank" ng-reflect-action="https://terrapass.com/cart" action="https://terrapass.com/cart">
+    <input _ngcontent-chj-15="" name="weight_needed" type="text" ng-reflect-name="weight_needed" class="ng-untouched ng-pristine ng-valid">
+    <input _ngcontent-chj-15="" name="_measurement_needed" type="text" ng-reflect-name="_measurement_needed" class="ng-untouched ng-pristine ng-valid">
+    <input _ngcontent-chj-15="" name="_measurement_needed_unit" type="text" ng-reflect-name="_measurement_needed_unit" class="ng-untouched ng-pristine ng-valid">
+    <input _ngcontent-chj-15="" name="quantity" type="text" ng-reflect-name="quantity" ng-reflect-model="1" class="ng-untouched ng-pristine ng-valid">
+    <input _ngcontent-chj-15="" name="add-to-cart" type="text" ng-reflect-name="add-to-cart" class="ng-untouched ng-pristine ng-valid">
+
+    <button _ngcontent-chj-15="" type="submit">SUBMIT</button>
+</form>
+</tpc-dashboard>
+        </div>
+    </div>
+    <tpc-spinner _ngcontent-chj-14="" _nghost-chj-12=""><div _ngcontent-chj-12="" id="spinner-wrap" ng-reflect-hidden="true" hidden="">
+    <div _ngcontent-chj-12="" class="spinner">
+        <div _ngcontent-chj-12="" class="double-bounce1"></div>
+        <div _ngcontent-chj-12="" class="double-bounce2"></div>
+    </div>
+</div>
+</tpc-spinner>
+</div>
+</tpc-calculator>
+</tpc-root>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script>
+
+</body></html>
